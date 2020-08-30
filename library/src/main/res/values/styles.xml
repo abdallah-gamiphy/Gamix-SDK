@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="Theme.GamixTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
+</resources>
