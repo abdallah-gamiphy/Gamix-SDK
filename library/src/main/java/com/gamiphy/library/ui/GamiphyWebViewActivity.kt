@@ -55,13 +55,11 @@ class GamiphyWebViewActivity : AppCompatActivity(),
 
     override fun login(user: User) {
         gamiphyData.config?.user = user
-        executeJavaScript(JavaScriptScripts.login(user))
         refresh()
     }
 
     override fun logout() {
         gamiphyData.config?.user = null
-        executeJavaScript(JavaScriptScripts.logout())
         refresh()
     }
 
@@ -99,16 +97,7 @@ class GamiphyWebViewActivity : AppCompatActivity(),
 
         }
 
-        webView.loadDataWithBaseURL(
-            "https://sdk.dev.gamiphy.co",
-            "<!DOCTYPE html>\n" +
-                    "<html lang=\"en\">\n" +
-                    "<head>\n" +
-                    "    <script src='$url'></script>\n" +
-                    "</head>\n" +
-                    "</html>"
-            , "text/html", null, ""
-        )
+        webView.loadDataWithBaseURL(url, GamiphyConstants.BOT_SCRIPT, "text/html", null, "")
 
         webView.addJavascriptInterface(
             JavaScriptInterface(), JAVASCRIPT_OBJ
