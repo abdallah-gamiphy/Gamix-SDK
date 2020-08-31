@@ -1,20 +1,11 @@
 package com.gamiphy.library.models
 
 data class User(
+    var id: String? = null,
     var firstName: String,
     var lastName: String,
     var email: String,
     var hash: String,
-    var avatar: String = ""
+    var avatar: String? = null,
+    var language: String? = null
 )
-
-
-//TODO use these.
-//id?: string,
-//email: string,
-//firstName?: string,
-//lastName?: string,
-//avatar?: string,
-//language?: Languages,
-//country?: string,
-//hash: string,

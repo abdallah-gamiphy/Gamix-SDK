@@ -2,13 +2,11 @@ package com.gamiphy.library
 
 import android.content.Context
 import androidx.annotation.RestrictTo
-import androidx.core.content.edit
 import com.gamiphy.library.actions.GamiphyWebViewActions
 import com.gamiphy.library.actions.OnAuthTrigger
-import com.gamiphy.library.actions.OnRedeemTrigger
-import com.gamiphy.library.actions.OnTaskTrigger
+import com.gamiphy.library.models.CoreConfig
+import com.gamiphy.library.models.GamiphyEnvironment
 import com.gamiphy.library.models.User
-import com.gamiphy.library.network.models.responses.redeem.Redeem
 import com.gamiphy.library.ui.GamiphyWebViewActivity
 import com.gamiphy.library.utils.GamiphyData
 
@@ -17,50 +15,24 @@ class GamiBotImpl : GamiBot {
     private val gamiphyData = GamiphyData.getInstance()
     private val gamiphyWebViewActionsList = mutableListOf<GamiphyWebViewActions>()
     private val gamiphyOnAuthTriggerListeners = mutableListOf<OnAuthTrigger>()
-    private val gamiphyOnTaskTriggerListeners = mutableListOf<OnTaskTrigger>()
-    private val gamiphyOnRedeemTriggerListeners = mutableListOf<OnRedeemTrigger>()
 
-    override fun init(context: Context, botId: String, language: String?, user: User?): GamiBot {
-        gamiphyData.botId = botId
-        gamiphyData.language = language
-        gamiphyData.user = user
+    override fun init(context: Context, config: CoreConfig): GamiBot {
+        gamiphyData.config = config
         open(context)
         return this
     }
 
-    override fun setDebug(debug: Boolean) {
-        gamiphyData.debug = debug
+    override fun setEnvironment(env: GamiphyEnvironment) {
+        gamiphyData.env = env
     }
 
     override fun open(context: Context) {
         context.startActivity(GamiphyWebViewActivity.newIntent(context))
     }
 
-    override fun setBotId(botId: String): GamiBotImpl {
-        gamiphyData.botId = botId
-        return this
-    }
-
-    override fun markRedeemDone(packageId: String, pointsToRedeem: Int) {
-    }
-
-    override fun markTaskDone(eventName: String, quantity: Int?) {
-        gamiphyWebViewActionsList.forEach {
-            it.markTaskDone(eventName)
-        }
-    }
-
-    override fun markTaskDoneSdk(eventName: String, email: String, data: Any?) {
-    }
-
-    override fun loginSDK(context: Context, user: User) {
-    }
-
-
     override fun login(user: User) {
-        gamiphyData.user = user
         gamiphyWebViewActionsList.forEach {
-            it.login()
+            it.login(user)
         }
     }
 
@@ -96,46 +68,9 @@ class GamiBotImpl : GamiBot {
         return this
     }
 
-    override fun registerGamiphyOnTaskTrigger(onTaskTrigger: OnTaskTrigger): GamiBotImpl {
-        gamiphyOnTaskTriggerListeners.add(onTaskTrigger)
-        return this
-    }
-
-    override fun unRegisterGamiphyOnTaskTrigger(onTaskTrigger: OnTaskTrigger): GamiBotImpl {
-        gamiphyOnTaskTriggerListeners.remove(onTaskTrigger)
-        return this
-    }
-
-    override fun registerGamiphyOnRedeemTrigger(onRedeemTrigger: OnRedeemTrigger): GamiBotImpl {
-        gamiphyOnRedeemTriggerListeners.add(onRedeemTrigger)
-        return this
-    }
-
-    override fun unRegisterGamiphyOnRedeemTrigger(onRedeemTrigger: OnRedeemTrigger): GamiBotImpl {
-        gamiphyOnRedeemTriggerListeners.remove(onRedeemTrigger)
-        return this
-    }
-
     override fun notifyAuthTrigger(signUp: Boolean) {
         gamiphyOnAuthTriggerListeners.forEach {
             it.onAuthTrigger(signUp)
         }
-    }
-
-    override fun notifyTaskTrigger(actionName: String) {
-        gamiphyOnTaskTriggerListeners.forEach {
-            it.onTaskTrigger(actionName)
-        }
-    }
-
-    override fun notifyRedeemTrigger(redeem: Redeem?) {
-        gamiphyOnRedeemTriggerListeners.forEach {
-            it.onRedeemTrigger(redeem)
-        }
-    }
-
-    companion object {
-        private const val TOKEN_PREF = "TOKEN_PREF"
-        private const val TOKEN_PREF_ID = "TOKEN_PREF_ID"
     }
 }

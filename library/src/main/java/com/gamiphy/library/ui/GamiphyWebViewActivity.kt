@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.gamiphy.library.GamiBot
 import com.gamiphy.library.actions.GamiphyWebViewActions
 import com.gamiphy.library.R
+import com.gamiphy.library.models.User
 import com.gamiphy.library.utils.GamiphyConstants
 import com.gamiphy.library.utils.GamiphyData
 import com.gamiphy.library.utils.JavaScriptScripts
@@ -52,13 +53,14 @@ class GamiphyWebViewActivity : AppCompatActivity(),
         gamiBot.unRegisterGamiphyWebViewActions(this)
     }
 
-    override fun login() {
-        postTokenMessage()
+    override fun login(user: User) {
+        gamiphyData.config?.user = user
+        executeJavaScript(JavaScriptScripts.login(user))
         refresh()
     }
 
     override fun logout() {
-        gamiphyData.user = null
+        gamiphyData.config?.user = null
         executeJavaScript(JavaScriptScripts.logout())
         refresh()
     }
@@ -73,14 +75,6 @@ class GamiphyWebViewActivity : AppCompatActivity(),
 
     override fun refresh() {
         initWebView(GamiphyConstants.BOT_API)
-    }
-
-    override fun markTaskDone(eventName: String) {
-//        executeJavaScript(JavaScriptScripts.trackEvent(eventName))
-    }
-
-    override fun markRedeemDone(rewardId: String) {
-//        executeJavaScript(JavaScriptScripts.redeemReward(rewardId))
     }
 
     private fun initViews() {
@@ -180,7 +174,7 @@ class GamiphyWebViewActivity : AppCompatActivity(),
      * else open unSigned web view
      */
     private fun postTokenMessage() {
-        executeJavaScript(JavaScriptScripts.init(gamiphyData.botId, gamiphyData.user))
+        executeJavaScript(JavaScriptScripts.init(gamiphyData.config!!))
     }
 
     private fun executeJavaScript(script: String) {
@@ -213,34 +207,18 @@ class GamiphyWebViewActivity : AppCompatActivity(),
             Log.d(GamiphyWebViewActivity::class.java.simpleName, " isLoggedIn =====<>>>>$isLogIn")
             gamiBot.notifyAuthTrigger(isLogIn)
         }
-
-        @JavascriptInterface
-        fun eventFromWeb(event: String) {
-            Log.d(GamiphyWebViewActivity::class.java.simpleName, "=====<>>>>$event")
-        }
+        //TODO share action
     }
 
-    private fun share(text: String?, link: String?) {
-        val sendIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, "$text \n $link")
-            type = "text/plain"
-        }
-
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivity(shareIntent)
+    fun closeBot(view: View) {
+        onBackPressed()
     }
 
     companion object {
-
         @JvmStatic
         fun newIntent(context: Context) =
             Intent(context, GamiphyWebViewActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
-    }
-
-    fun closeBot(view: View) {
-        onBackPressed()
     }
 }

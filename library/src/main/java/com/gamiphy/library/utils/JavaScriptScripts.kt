@@ -1,17 +1,21 @@
 package com.gamiphy.library.utils
 
+import android.util.Log
+import com.gamiphy.library.models.CoreConfig
 import com.gamiphy.library.models.User
 import com.google.gson.Gson
 
 object JavaScriptScripts {
 
-    fun init(appId: String, user: User? = null): String {
+    fun init(config: CoreConfig): String {
+        val initConfig = Gson().toJson(config).toString()
+        val json = initConfig.substring(1, initConfig.length - 1)
+        Log.d("!@#!$", json)
         return ("javascript: window.Gamiphy.init({\n" +
-                                 "app: '$appId',\n" +
-                                 getUser(user) +
-                                 "goToAuth: function (event) {" +
-                                 JAVASCRIPT_OBJ + ".isLoggedIn(JSON.stringify(event)); " +
-                                 "}" +
+                "$json,\n" +
+                "goToAuth: function (event) {" +
+                JAVASCRIPT_OBJ + ".isLoggedIn(JSON.stringify(event)); " +
+                "}" +
                 "})"
                 )
     }

@@ -2,9 +2,11 @@ package com.gamiphy.gamiphysdk
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.gamiphy.library.GamiBot
+import com.gamiphy.library.actions.OnAuthTrigger
 import com.gamiphy.library.models.User
 
 class MainActivity : AppCompatActivity() {
@@ -14,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val button = findViewById<Button>(R.id.bot)
         val button2 = findViewById<Button>(R.id.newone)
+
         button2.setOnClickListener {
             startActivity(
                 Intent(
@@ -23,16 +26,25 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        GamiBot.getInstance().registerGamiphyOnAuthTrigger(object : OnAuthTrigger {
+            override fun onAuthTrigger(signUp: Boolean) {
+                // make your action here, you may start login activity
+                Log.d("onAuthTrigger", "$signUp")
+
+            }
+        })
+
         findViewById<Button>(R.id.login).setOnClickListener {
             GamiBot.getInstance().login(
                 User(
-                    "Riyad",
-                    "Yahya",
-                    "riyad@gamiphy.co",
-                    "93b2844c18a8804dee394ee73efde8294ad263c1488ab8522d93dfd55dcb65fb"
+                    firstName = "Riyad",
+                    lastName = "Yahya",
+                    email = "riyad@gamiphy.co",
+                    hash = "93b2844c18a8804dee394ee73efde8294ad263c1488ab8522d93dfd55dcb65fb"
                 )
             )
         }
+
         button.setOnClickListener {
             GamiBot.getInstance().open(this)
         }

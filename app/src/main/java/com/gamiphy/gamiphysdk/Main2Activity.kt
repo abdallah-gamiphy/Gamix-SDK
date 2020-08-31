@@ -10,14 +10,10 @@ class Main2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
-
-
         val btn: Button = findViewById(R.id.button)
-
 
         btn.setOnClickListener {
             GamiBot.getInstance().logout(this)
-//            GamiBot.getInstance().refresh()
         }
     }
 }
