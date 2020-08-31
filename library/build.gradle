@@ -75,4 +75,5 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:4.8.0"
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+    implementation "androidx.constraintlayout:constraintlayout:2.0.0"
 }

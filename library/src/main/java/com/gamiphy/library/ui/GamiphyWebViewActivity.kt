@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.webkit.*
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,7 @@ import com.gamiphy.library.utils.JavaScriptScripts.JAVASCRIPT_OBJ
 class GamiphyWebViewActivity : AppCompatActivity(),
     GamiphyWebViewActions {
     private lateinit var webView: WebView
+    private lateinit var closeBtn: ImageButton
     private lateinit var progressBar: ProgressBar
     private val gamiBot = GamiBot.getInstance()
     private val gamiphyData = GamiphyData.getInstance()
@@ -84,6 +86,7 @@ class GamiphyWebViewActivity : AppCompatActivity(),
     private fun initViews() {
         webView = findViewById(R.id.webView)
         progressBar = findViewById(R.id.progressBar)
+        closeBtn = findViewById(R.id.close_btn)
         initWebView(GamiphyConstants.BOT_API)
     }
 
@@ -122,12 +125,13 @@ class GamiphyWebViewActivity : AppCompatActivity(),
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 showLoading()
-
+                showCloseBtn()
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 hideLoading()
+                hideCloseBtn()
                 postTokenMessage()
             }
 
@@ -147,6 +151,7 @@ class GamiphyWebViewActivity : AppCompatActivity(),
                 error: SslError?
             ) {
                 hideLoading()
+                hideCloseBtn()
             }
 
 
@@ -156,6 +161,7 @@ class GamiphyWebViewActivity : AppCompatActivity(),
                 errorResponse: WebResourceResponse?
             ) {
                 hideLoading()
+                hideCloseBtn()
             }
 
             override fun onReceivedError(
@@ -164,6 +170,7 @@ class GamiphyWebViewActivity : AppCompatActivity(),
                 error: WebResourceError?
             ) {
                 hideLoading()
+                hideCloseBtn()
             }
         }
     }
@@ -190,6 +197,14 @@ class GamiphyWebViewActivity : AppCompatActivity(),
 
     private fun showLoading() {
         progressBar.visibility = View.VISIBLE
+    }
+
+    private fun showCloseBtn() {
+        closeBtn.visibility = View.GONE
+    }
+
+    private fun hideCloseBtn() {
+        closeBtn.visibility = View.VISIBLE
     }
 
     private inner class JavaScriptInterface {
@@ -223,5 +238,9 @@ class GamiphyWebViewActivity : AppCompatActivity(),
             Intent(context, GamiphyWebViewActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
+    }
+
+    fun closeBot(view: View) {
+        onBackPressed()
     }
 }
