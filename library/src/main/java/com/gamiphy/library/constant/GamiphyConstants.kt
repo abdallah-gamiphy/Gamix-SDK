@@ -1,5 +1,6 @@
-package com.gamiphy.library.utils
+package com.gamiphy.library.constant
 
+import com.gamiphy.library.models.GamiphyData
 import com.gamiphy.library.models.GamiphyEnvironment
 
 object GamiphyConstants {

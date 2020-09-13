@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.webkit.*
 import android.widget.ImageButton
@@ -15,13 +14,13 @@ import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.gamiphy.library.GamiBot
-import com.gamiphy.library.actions.GamiphyWebViewActions
+import com.gamiphy.library.helper.JavaScriptInterfaceHelper
 import com.gamiphy.library.R
 import com.gamiphy.library.models.User
-import com.gamiphy.library.utils.GamiphyConstants
-import com.gamiphy.library.utils.GamiphyData
-import com.gamiphy.library.utils.JavaScriptScripts
-import com.gamiphy.library.utils.JavaScriptScripts.JAVASCRIPT_OBJ
+import com.gamiphy.library.constant.GamiphyConstants
+import com.gamiphy.library.models.GamiphyData
+import com.gamiphy.library.constant.JavaScriptScripts
+import com.gamiphy.library.constant.JavaScriptScripts.JAVASCRIPT_OBJ
 
 
 class GamiphyWebViewActivity : AppCompatActivity(),
@@ -29,7 +28,6 @@ class GamiphyWebViewActivity : AppCompatActivity(),
     private lateinit var webView: WebView
     private lateinit var closeBtn: ImageButton
     private lateinit var progressBar: ProgressBar
-    private val gamiBot = GamiBot.getInstance()
     private val gamiphyData = GamiphyData.getInstance()
     private var firstLogin: Boolean = true
 
@@ -37,7 +35,7 @@ class GamiphyWebViewActivity : AppCompatActivity(),
         checkFirstStart()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gamiphy_web_view)
-        gamiBot.registerGamiphyWebViewActions(this)
+        GamiBot.getInstance().registerGamiphyWebViewActions(this)
         initViews()
     }
 
@@ -50,7 +48,7 @@ class GamiphyWebViewActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         super.onDestroy()
-        gamiBot.unRegisterGamiphyWebViewActions(this)
+        GamiBot.getInstance().unRegisterGamiphyWebViewActions(this)
     }
 
     override fun login(user: User) {
@@ -100,7 +98,7 @@ class GamiphyWebViewActivity : AppCompatActivity(),
         webView.loadDataWithBaseURL(url, GamiphyConstants.BOT_SCRIPT, "text/html", null, "")
 
         webView.addJavascriptInterface(
-            JavaScriptInterface(), JAVASCRIPT_OBJ
+            JavaScriptInterfaceHelper(), JAVASCRIPT_OBJ
         )
 
         webView.webViewClient = object : WebViewClient() {
@@ -136,7 +134,6 @@ class GamiphyWebViewActivity : AppCompatActivity(),
                 hideLoading()
                 hideCloseBtn()
             }
-
 
             override fun onReceivedHttpError(
                 view: WebView?,
@@ -188,15 +185,6 @@ class GamiphyWebViewActivity : AppCompatActivity(),
 
     private fun hideCloseBtn() {
         closeBtn.visibility = View.VISIBLE
-    }
-
-    private inner class JavaScriptInterface {
-        @JavascriptInterface
-        fun isLoggedIn(isLogIn: Boolean) {
-            Log.d(GamiphyWebViewActivity::class.java.simpleName, " isLoggedIn =====<>>>>$isLogIn")
-            gamiBot.notifyAuthTrigger(isLogIn)
-        }
-        //TODO share action
     }
 
     fun closeBot(view: View) {
