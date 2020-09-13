@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.gamiphy.library.GamiBot
-import com.gamiphy.library.actions.OnAuthTrigger
+import com.gamiphy.library.callback.OnAuthTrigger
 import com.gamiphy.library.models.User
 
 class MainActivity : AppCompatActivity() {
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        GamiBot.getInstance().registerGamiphyOnAuthTrigger(object : OnAuthTrigger {
+        GamiBot.getInstance().addOnAuthListener(object : OnAuthTrigger {
             override fun onAuthTrigger(signUp: Boolean) {
                 // make your action here, you may start login activity
                 Log.d("onAuthTrigger", "$signUp")

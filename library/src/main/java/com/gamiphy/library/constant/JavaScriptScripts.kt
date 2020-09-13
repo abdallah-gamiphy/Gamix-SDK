@@ -1,4 +1,4 @@
-package com.gamiphy.library.utils
+package com.gamiphy.library.constant
 
 import com.gamiphy.library.models.CoreConfig
 import com.google.gson.Gson

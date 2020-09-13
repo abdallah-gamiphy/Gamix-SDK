@@ -1,4 +1,4 @@
-package com.gamiphy.library.actions
+package com.gamiphy.library.ui
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.RestrictTo.Scope

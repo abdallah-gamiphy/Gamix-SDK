@@ -1,4 +1,4 @@
-package com.gamiphy.library.actions
+package com.gamiphy.library.callback
 
 /**
  * A listener for authentication events from Gamiphy bot such that you can implement your actions for login/SignUp events.

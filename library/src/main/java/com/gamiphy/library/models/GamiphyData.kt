@@ -1,8 +1,4 @@
-package com.gamiphy.library.utils
-
-import com.gamiphy.library.models.CoreConfig
-import com.gamiphy.library.models.GamiphyEnvironment
-import com.gamiphy.library.models.User
+package com.gamiphy.library.models
 
 /**
  * This is as a repo for data shared inside the library.
@@ -16,7 +12,8 @@ class GamiphyData private constructor() {
 
         fun getInstance(): GamiphyData {
             if (instance == null) {
-                instance = GamiphyData()
+                instance =
+                    GamiphyData()
             }
             return instance!!
         }

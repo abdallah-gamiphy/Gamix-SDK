@@ -2,19 +2,19 @@ package com.gamiphy.library
 
 import android.content.Context
 import androidx.annotation.RestrictTo
-import com.gamiphy.library.actions.GamiphyWebViewActions
-import com.gamiphy.library.actions.OnAuthTrigger
+import com.gamiphy.library.callback.OnAuthTrigger
+import com.gamiphy.library.helper.JavaScriptInterfaceHelper
 import com.gamiphy.library.models.CoreConfig
 import com.gamiphy.library.models.GamiphyEnvironment
 import com.gamiphy.library.models.User
+import com.gamiphy.library.ui.GamiphyWebViewActions
 import com.gamiphy.library.ui.GamiphyWebViewActivity
-import com.gamiphy.library.utils.GamiphyData
+import com.gamiphy.library.models.GamiphyData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 class GamiBotImpl : GamiBot {
     private val gamiphyData = GamiphyData.getInstance()
     private val gamiphyWebViewActionsList = mutableListOf<GamiphyWebViewActions>()
-    private val gamiphyOnAuthTriggerListeners = mutableListOf<OnAuthTrigger>()
 
     override fun init(context: Context, config: CoreConfig): GamiBot {
         gamiphyData.config = config
@@ -48,29 +48,15 @@ class GamiBotImpl : GamiBot {
         }
     }
 
-    override fun registerGamiphyWebViewActions(gamiphyWebViewActions: GamiphyWebViewActions): GamiBotImpl {
+    override fun addOnAuthListener(onAuthTrigger: OnAuthTrigger) {
+        JavaScriptInterfaceHelper.onAuthTriggerListeners.add(onAuthTrigger)
+    }
+
+    override fun registerGamiphyWebViewActions(gamiphyWebViewActions: GamiphyWebViewActions) {
         gamiphyWebViewActionsList.add(gamiphyWebViewActions)
-        return this
     }
 
-    override fun unRegisterGamiphyWebViewActions(gamiphyWebViewActions: GamiphyWebViewActions): GamiBotImpl {
+    override fun unRegisterGamiphyWebViewActions(gamiphyWebViewActions: GamiphyWebViewActions) {
         gamiphyWebViewActionsList.remove(gamiphyWebViewActions)
-        return this
-    }
-
-    override fun registerGamiphyOnAuthTrigger(onAuthTrigger: OnAuthTrigger): GamiBotImpl {
-        gamiphyOnAuthTriggerListeners.add(onAuthTrigger)
-        return this
-    }
-
-    override fun unRegisterGamiphyOnAuthTrigger(onAuthTrigger: OnAuthTrigger): GamiBotImpl {
-        gamiphyOnAuthTriggerListeners.remove(onAuthTrigger)
-        return this
-    }
-
-    override fun notifyAuthTrigger(signUp: Boolean) {
-        gamiphyOnAuthTriggerListeners.forEach {
-            it.onAuthTrigger(signUp)
-        }
     }
 }

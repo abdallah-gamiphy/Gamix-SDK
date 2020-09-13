@@ -1,12 +1,11 @@
 package com.gamiphy.library
 
 import android.content.Context
-import androidx.annotation.RestrictTo
-import com.gamiphy.library.actions.GamiphyWebViewActions
-import com.gamiphy.library.actions.OnAuthTrigger
+import com.gamiphy.library.callback.OnAuthTrigger
 import com.gamiphy.library.models.CoreConfig
 import com.gamiphy.library.models.GamiphyEnvironment
 import com.gamiphy.library.models.User
+import com.gamiphy.library.ui.GamiphyWebViewActions
 
 interface GamiBot {
     fun init(context: Context, config: CoreConfig): GamiBot
@@ -15,16 +14,9 @@ interface GamiBot {
     fun close()
     fun login(user: User)
     fun logout(context: Context)
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY)
-    fun registerGamiphyWebViewActions(gamiphyWebViewActions: GamiphyWebViewActions): GamiBotImpl
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY)
-    fun unRegisterGamiphyWebViewActions(gamiphyWebViewActions: GamiphyWebViewActions): GamiBotImpl
-
-    fun registerGamiphyOnAuthTrigger(onAuthTrigger: OnAuthTrigger): GamiBotImpl
-    fun unRegisterGamiphyOnAuthTrigger(onAuthTrigger: OnAuthTrigger): GamiBotImpl
-    fun notifyAuthTrigger(signUp: Boolean)
+    fun addOnAuthListener(onAuthTrigger: OnAuthTrigger)
+    fun registerGamiphyWebViewActions(gamiphyWebViewActions: GamiphyWebViewActions)
+    fun unRegisterGamiphyWebViewActions(gamiphyWebViewActions: GamiphyWebViewActions)
 
     companion object {
         private var instance: GamiBotImpl? = null
